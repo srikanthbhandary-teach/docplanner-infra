@@ -1,3 +1,12 @@
+terraform {
+backend "s3" {
+    bucket         = "docplanner-infra-state"
+    key            = "testing/eu-north-1/terraform.tfstate"
+    region         = "eu-north-1"
+    dynamodb_table = "docplanner-infra-state-lock"
+}
+}
+
 provider "aws" {
   region = "eu-north-1"
 }

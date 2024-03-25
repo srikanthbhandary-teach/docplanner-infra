@@ -1,0 +1,5 @@
+environments/production/eu-north-1/.terraform
+environments/production/eu-west-2/.terraform
+environments/testing/eu-north-1/.terraform
+environments/testing/eu-west-2/.terraform
+

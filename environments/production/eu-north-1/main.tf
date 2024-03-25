@@ -19,7 +19,7 @@ module "eks_vpc" {
   availability_zones         = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
   subnet_private_cidr_blocks = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
   subnet_public_cidr_blocks  = ["10.1.4.0/24", "10.1.5.0/24", "10.1.6.0/24"]
-  region = var.region
+  region = var.region  
 }
 
 module "eks_cluster" {            
@@ -27,19 +27,8 @@ module "eks_cluster" {
   vpc_id = module.eks_vpc.vpc_id
   cluster_name = var.cluster_name
   private_subnet_ids = module.eks_vpc.private_subnet_ids
+  min_size = 2
   tags = var.tags 
 }
 
-module "lb_role" {
-  source    = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  role_name = "${var.cluster_name}_eks_lb"
-  attach_load_balancer_controller_policy = true
-
-  oidc_providers = {
-    main = {
-      provider_arn               = module.eks_cluster.oidc_provider_arn
-      namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
-    }
-  }
-}
 

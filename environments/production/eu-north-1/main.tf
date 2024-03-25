@@ -12,6 +12,15 @@ provider "aws" {
   region = "eu-north-1"
 }
 
+/*
+  Creates a custom VPC with a single NAT gateway in three private subnets
+  and a single Internet Gateway attached to three public subnets.
+  
+  Note: This VPC is handcrafted for demonstration purposes and can be further improved.
+        One way to do this using the `terraform-aws-modules/security-group/aws`
+        for simplifying security group creation.    
+*/
+
 module "eks_vpc" {
   source                     = "github.com/srikanthbhandary-teach/terraform-eks-vpc?ref=v1.0.0"
   cluster_name               = var.cluster_name
@@ -22,6 +31,10 @@ module "eks_vpc" {
   region                     = var.region
 }
 
+
+/* 
+  Cretaes an EKS cluster with the EKS managed nodes.
+*/
 module "eks_cluster" {
   source             = "github.com/srikanthbhandary-teach/terraform-eks-cluster?ref=v1.0.2"
   vpc_id             = module.eks_vpc.vpc_id
@@ -32,6 +45,17 @@ module "eks_cluster" {
   cluster_version    = var.cluster_version
 }
 
+/* 
+  Adds the Cluster Autoscaler to the Kubernetes cluster.
+
+  This function also leverages the same module to install additional components 
+  such as the Karpenter and LoadBalancer Controller.
+
+  TODO: Consider moving this functionality to github.com/srikanthbhandary-teach/terraform-eks-cluster
+
+  Note: Cluster Autoscaler helps in automatically adjusting the size of the Kubernetes cluster 
+  based on the resource usage.
+*/
 module "eks_blueprints_addons" {
   source  = "aws-ia/eks-blueprints-addons/aws"
   version = "1.16.1"
@@ -46,4 +70,3 @@ module "eks_blueprints_addons" {
     wait = true
   }
 }
-

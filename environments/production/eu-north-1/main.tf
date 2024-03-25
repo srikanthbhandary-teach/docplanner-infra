@@ -33,7 +33,9 @@ module "eks_vpc" {
 
 
 /* 
-  Cretaes an EKS cluster with the EKS managed nodes.
+  Creates an Amazon EKS cluster with managed nodes.
+  The minimum size is set to two nodes. It is noted that to run ArgoCD, 
+  there are pod affinity rules requiring a minimum of two nodes for full functionality.
 */
 module "eks_cluster" {
   source             = "github.com/srikanthbhandary-teach/terraform-eks-cluster?ref=v1.0.2"

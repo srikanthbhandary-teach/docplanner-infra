@@ -29,6 +29,8 @@ module "eks_vpc" {
   subnet_private_cidr_blocks = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
   subnet_public_cidr_blocks  = ["10.1.4.0/24", "10.1.5.0/24", "10.1.6.0/24"]
   region                     = var.region
+  # The current version of the module does not include support for specifying database subnets.
+  # However, adding this feature to the module would enhance its flexibility and usefulness.
 }
 
 
@@ -56,8 +58,11 @@ module "eks_cluster" {
   TODO: Consider moving this functionality to github.com/srikanthbhandary-teach/terraform-eks-cluster
 
   Note: Cluster Autoscaler helps in automatically adjusting the size of the Kubernetes cluster 
-  based on the resource usage.
+  based on the resource usage. 
+  
+  For other addons: https://github.com/aws-ia/terraform-aws-eks-blueprints-addons
 */
+
 module "eks_blueprints_addons" {
   source  = "aws-ia/eks-blueprints-addons/aws"
   version = "1.16.1"
